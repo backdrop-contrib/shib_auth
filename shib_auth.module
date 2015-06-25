@@ -114,7 +114,7 @@ function shib_auth_help($path, $arg) {
  *  Error message.
  */
 function shib_auth_error($msg = '') {
-  drupal_set_message(filter_xss(t("[Shibboleth authentication] %msg", array('%msg' => $msg)), 'error'));
+  drupal_set_message(filter_xss(t("[Shibboleth authentication] %msg", array('%msg' => $msg))), 'error');
   return FALSE;
 } // function shib_auth_error
 
