@@ -1056,10 +1056,10 @@ function shib_auth_block_info() {
   // listing of blocks, such as on the admin/block page
   $blocks['login_box'] = array(
     'info'       => t('Shibboleth authentication'),
-    'status'     => 1,
+    'status'     => 0,
     'visibility' => BLOCK_VISIBILITY_NOTLISTED,
     'weight'     => 0,
-    'region'     => 'sidebar_first'
+    'region'     => ''
   );
   return $blocks;
 } //function shib_auth_block_info
