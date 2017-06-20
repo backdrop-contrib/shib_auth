@@ -848,7 +848,7 @@ function shib_auth_get_redirect_base($handlerurl) {
     if (isset($_SERVER['HTTPS']) || shib_auth_config('force_https'))
       $handlerprotocol = 'https';
 
-    return $handlerprotocol . '://' . $_SERVER['HTTP_HOST'] . $handlerurl;
+    return $handlerprotocol . '://' . $_SERVER['SERVER_NAME'] . $handlerurl;
   }
   return $handlerurl;
 }
@@ -872,7 +872,7 @@ function shib_auth_get_handler_base() {
     if (drupal_substr($handlerurl, 0, 1) != '/') {
       $handlerurl = '/' . $handlerurl;
     }
-    return $handlerprotocol . '://' . $_SERVER['HTTP_HOST'] . $handlerurl;
+    return $handlerprotocol . '://' . $_SERVER['SERVER_NAME'] . $handlerurl;
   }
 } //function shib_auth_get_handler_base
 
@@ -931,7 +931,7 @@ function shib_auth_generate_login_url() {
   $url_to_return = (isset($_SERVER['HTTPS'])||
                    (shib_auth_config('force_https') && drupal_substr($sessioninitiator, 0, 5) == 'https') ?
                    'https' : 'http')
-                           . '://' . $_SERVER['HTTP_HOST']
+                           . '://' . $_SERVER['SERVER_NAME']
                            . url('', array('query' => $queries));
 
   if (preg_match('/\?/', $sessioninitiator)) {
