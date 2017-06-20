@@ -235,10 +235,14 @@ function shib_auth_custom_data_validate($form, &$form_state) {
  */
 function shib_auth_login() {
   $queries = $_GET;
-  $queries['q'] = drupal_substr($_GET['q'], 11);
 
-  if ($queries['q']!='shib_link') {
-    drupal_goto('', array('query' => $queries));
+  // Get the path stripped of the shib_login/ prefix.
+  $path = drupal_substr($_GET['q'], 11);
+
+  if ($path != 'shib_link') {
+    // Remove q (Drupal path) from further queries.
+    unset($queries['q']);
+    drupal_goto($path, array('query' => $queries));
   }
   else {
     drupal_goto('shib_login/user');
