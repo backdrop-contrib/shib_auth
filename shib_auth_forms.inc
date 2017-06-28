@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @file
  * Drupal forms of the Shibboleth authentication module.
  */
 
 /**
- * Form constructor for the shib_auth admin general page
+ * Form constructor for the shib_auth admin general page.
  *
  * @ingroup forms
  */
@@ -110,7 +111,7 @@ function shib_auth_admin_general($form, &$form_state) {
     '#type'          => 'textfield',
     '#title'         => t('DEBUG path prefix'),
     '#default_value' => shib_auth_config('debug_url'),
-    '#description'   => t('For example use \'user/\' for display DEBUG messages on paths \'user/*\'!')
+    '#description'   => t("For example use 'user/' for display DEBUG messages on paths 'user/*'!"),
   );
 
   return system_settings_form($form);
@@ -119,7 +120,7 @@ function shib_auth_admin_general($form, &$form_state) {
 /**
  * Form constructor for the shib_auth custom form.
  *
- * Generate the custom e-mail and username provider form
+ * Generate the custom e-mail and username provider form.
  *
  * @see shib_auth_custom_data_validate()
  * @see shib_auth_custom_data_submit()
@@ -128,23 +129,34 @@ function shib_auth_admin_general($form, &$form_state) {
 function shib_auth_custom_data($form, &$form_state) {
   global $user;
 
-  //drupal_set_message("Old user, accept, consentver: ".(int)$existing_authmap.",".(int)$consent_accepted.",".(int)$existing_authmap['consentver'], 'error');
+  // drupal_set_message("Old user, accept, consentver: ".(int)$existing_authmap
+  // .",".(int)$consent_accepted.",".(int)$existing_authmap['consentver'],
+  // 'error');.
   $form = array();
-  //Decide if the user is already registered, but a new consent version is present
+  // Decide if the user is already registered, but a new consent version is
+  // present.
   $authmap_username = db_select('shib_authmap', 'c')
-                          ->fields('c')
-                          ->condition('targeted_id', shib_auth_getenv(shib_auth_config('username_variable')), '=')
-                          ->execute()
-                          ->fetchAssoc();
-  //if the user already registered, display a message about consent version change
+    ->fields('c')
+    ->condition('targeted_id', shib_auth_getenv(shib_auth_config('username_variable')), '=')
+    ->execute()
+    ->fetchAssoc();
+  // If the user already registered, display a message about consent version
+  // change.
   if ($authmap_username) {
     $form['consent'] = array(
-        '#value' => t('The terms of use document has been modified since your last login with id @targetedid. Please read it carefully, and click on Submit if you accept the new version. Version you have accepted: @accepted - document version: @documentver', array('@targetedid' => $authmap_username['targeted_id'], '@accepted' => $authmap_username['consentver'], '@documentver' => shib_auth_config('terms_ver') )),
-      );
+      '#value' => t(
+        'The terms of use document has been modified since your last login with id @targetedid. Please read it carefully, and click on Submit if you accept the new version. Version you have accepted: @accepted - document version: @documentver',
+        array(
+          '@targetedid' => $authmap_username['targeted_id'],
+          '@accepted' => $authmap_username['consentver'],
+          '@documentver' => shib_auth_config('terms_ver'),
+        )
+      ),
+    );
   }
-  //register a new user with the data given here
+  // Register a new user with the data given here.
   else {
-    //username textfield is writable, if define_username variable is true
+    // Username textfield is writable, if define_username variable is true.
     if (shib_auth_config('define_username')) {
       $form['custom_username'] = array(
         '#type'          => 'textfield',
@@ -153,7 +165,7 @@ function shib_auth_custom_data($form, &$form_state) {
         '#size'          => 60,
       );
     }
-    //username textfield is not writable, if define_username variable is false
+    // Username textfield is not writable, if define_username variable is false.
     else {
       $form['custom_usernamem'] = array(
         '#markup' => t('<b>Username:</b> <br />'),
@@ -166,7 +178,7 @@ function shib_auth_custom_data($form, &$form_state) {
     }
 
     if (shib_auth_config('enable_custom_mail')) {
-      //mail textfield is writable, if define_username variable is true
+      // Mail textfield is writable, if define_username variable is true.
       $form['custom_mail'] = array(
         '#type'          => 'textfield',
         '#title'         => t('E-mail'),
@@ -174,7 +186,7 @@ function shib_auth_custom_data($form, &$form_state) {
         '#size'          => 60,
       );
     }
-    //mail textfield is not writable, if define_username variable is false
+    // Mail textfield is not writable, if define_username variable is false.
     else {
       $form['custom_mailm'] = array(
         '#markup' => t('<b>E-mail:</b> <br />'),
@@ -186,11 +198,11 @@ function shib_auth_custom_data($form, &$form_state) {
       );
     }
   }
-  //display terms of use link, if it is required by admin
+  // Display terms of use link, if it is required by admin.
   if (shib_auth_config('terms_accept')) {
     $form['accept'] = array(
-    '#type'          => 'checkbox',
-    '#title'         => t('I accept the <a href="@link" target="_blank">terms and conditions</a>', array('@link' => url(shib_auth_config('terms_url')))),
+      '#type'          => 'checkbox',
+      '#title'         => t('I accept the <a href="@link" target="_blank">terms and conditions</a>', array('@link' => url(shib_auth_config('terms_url')))),
     );
   }
 
@@ -213,13 +225,13 @@ function shib_auth_custom_data($form, &$form_state) {
 function shib_auth_custom_data_validate($form, &$form_state) {
   if (shib_auth_config('enable_custom_mail')) {
     if ($form_state['values']['custom_mail'] == '') {
-      form_set_error('', t('You have to fill the \'E-mail\' field.'));
+      form_set_error('', t("You have to fill the 'E-mail' field."));
     }
   }
 
   if (shib_auth_config('define_username')) {
     if ($form_state['values']['custom_username'] == '') {
-      form_set_error('', t('You have to fill the \'Username\' field.'));
+      form_set_error('', t("You have to fill the 'Username' field."));
     }
   }
 
@@ -231,7 +243,7 @@ function shib_auth_custom_data_validate($form, &$form_state) {
 } // shib_auth_custom_email_validate()
 
 /**
- * This function prevents drupal loading a cached page after shibboleth login
+ * This function prevents drupal loading a cached page after shibboleth login.
  */
 function shib_auth_login() {
   $queries = $_GET;
@@ -250,15 +262,15 @@ function shib_auth_login() {
 }
 
 /**
- * This function manages account linking
+ * This function manages account linking.
  */
 function shib_auth_account_link() {
-    $_SESSION['shib_auth_account_linking'] = TRUE;
-    drupal_goto(shib_auth_generate_login_url());
+  $_SESSION['shib_auth_account_linking'] = TRUE;
+  drupal_goto(shib_auth_generate_login_url());
 }
 
 /**
- * Form constructor for the shib_auth admin advanced page
+ * Form constructor for the shib_auth admin advanced page.
  *
  * @ingroup forms
  */
@@ -308,7 +320,7 @@ function shib_auth_admin_advanced() {
     '#type'          => 'textfield',
     '#title'         => t("URL to redirect to after login"),
     '#default_value' => shib_auth_config('login_url'),
-    '#description'   => t("The URL can be absolute or relative to the server base url. The relative paths will be automatically extended with the site base URL. If this value is empty than the user will be redirected to the originally requested page.")
+    '#description'   => t("The URL can be absolute or relative to the server base url. The relative paths will be automatically extended with the site base URL. If this value is empty than the user will be redirected to the originally requested page."),
   );
 
   $form['shib_logout_settings'] = array(
@@ -321,7 +333,7 @@ function shib_auth_admin_advanced() {
     '#type'          => 'textfield',
     '#title'         => t("URL to redirect to after logout"),
     '#default_value' => shib_auth_config('logout_url'),
-    '#description'   => t("The URL can be absolute or relative to the server base url. The relative paths will be automatically extended with the site base URL. If you are using SLO, this setting is probably useless (depending on the IdP)")
+    '#description'   => t("The URL can be absolute or relative to the server base url. The relative paths will be automatically extended with the site base URL. If you are using SLO, this setting is probably useless (depending on the IdP)"),
   );
 
   $form['shib_terms_conditions_settings'] = array(
@@ -354,5 +366,3 @@ function shib_auth_admin_advanced() {
 
   return system_settings_form($form);
 }
-
-

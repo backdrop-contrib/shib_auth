@@ -2,6 +2,4 @@ name = Shibboleth authentication
 description = "Shibboleth authentication module."
 package = Shibboleth
 core = 7.x
-files[] = shib_auth_forms.inc
-files[] = shib_auth_roles_forms.inc
 configure = admin/config/people/shib_auth
