@@ -73,7 +73,7 @@ function _shib_auth_list_rules() {
   $output .= l(t('Add new rule'), 'admin/config/people/shib_auth/new');
 
   return $output;
-} //function _shib_auth_list_rules
+}
 
 /**
  * This is the confirmation form for deleting a rule.
@@ -88,7 +88,7 @@ function _shib_auth_rule_delete_confirm_form($form, &$form_state) {
   return confirm_form($form,
                       filter_xss($desc),
                       'admin/config/people/shib_auth/rules');
-} //_shib_auth_rule_delete_confirm_form
+}
 
 /**
  * This function deletes an existing rule.
@@ -111,7 +111,7 @@ function _shib_auth_rule_delete_confirm_form_submit($form, &$form_state) {
   }
 
   drupal_goto('admin/config/people/shib_auth/rules');
-} //_shib_auth_rule_delete_confirm_form
+}
 
 /**
  * This is the confirmation form for cloning a rule.
@@ -126,7 +126,7 @@ function _shib_auth_rule_clone_confirm_form($form, &$form_state) {
   return confirm_form($form,
                       filter_xss($desc),
                       'admin/config/people/shib_auth/rules');
-} //_shib_auth_rule_clone_confirm_form
+}
 
 /**
  * Enables the administrator to clone an existing rule.
@@ -157,7 +157,7 @@ function _shib_auth_rule_clone_confirm_form_submit($form, &$form_state) {
   }
 
   drupal_goto('admin/config/people/shib_auth/rules');
-} //function _shib_auth_rule_clone_confirm_form_submit
+}
 
 /**
  * Generate the shibboleth rule adding form.
@@ -222,14 +222,14 @@ function shib_auth_edit_form(array $options) {
   );
 
   return $form;
-} //function shib_auth_edit_form
+}
 
 /**
  * Creates a new rule by calling universal create/edit form.
  */
 function shib_auth_new_rule($form, &$form_state) {
   return shib_auth_edit_form(array(0, '', '', '', t('Add rule'), 0));
-} //function shib_auth_new_rule
+}
 
 /**
  * Validates a new rule form.
@@ -241,14 +241,14 @@ function shib_auth_new_rule_validate($form, &$form_state) {
   if (empty($form_state['values']['shib_auth_new_regexp'])) {
     form_set_error('shib_auth_new_regexp', t('This element must not be empty'));
   }
-} //function shib_auth_new_rule_validate
+}
 
 /**
  * Submit the new rule from.
  */
 function shib_auth_new_rule_submit($form, &$form_state) {
   shib_auth_save_rule($form_state, array());
-} //function shib_auth_new_rule_submit
+}
 
 /**
  * Cunstructor of the rule edit form.
@@ -274,7 +274,7 @@ function shib_auth_edit_rule($form, &$form_state) {
       )
     );
   }
-} //function shib_auth_edit_rule
+}
 
 /**
  * Validates rule edit form.
@@ -286,14 +286,14 @@ function shib_auth_edit_rule_validate($form, &$form_state) {
   if (empty($form_state['values']['shib_auth_new_regexp'])) {
     form_set_error('shib_auth_new_regexp', t('This element must not be empty'));
   }
-} //function shib_auth_edit_rule_validate
+}
 
 /**
  * Submit rule edit form.
  */
 function shib_auth_edit_rule_submit($form, &$form_state) {
   shib_auth_save_rule($form_state, "id");
-} //function shib_auth_edit_rule_submit
+}
 
 /**
  * Saves a new rule into database.
@@ -350,4 +350,4 @@ function shib_auth_save_rule(array $form_state, $update) {
   }
 
   drupal_goto('admin/config/people/shib_auth/rules');
-} //function shib_auth_save_rule
+}

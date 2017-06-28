@@ -65,7 +65,7 @@ function shib_auth_config($variable, $list = FALSE) {
     drupal_set_message(t("Function shib_auth_config(%variable) called but %variable doesn't exists.", array('%variable' => $variable)), 'error');
     return FALSE;
   }
-} //function shib_auth_config
+}
 
 /**
  * Executes isPassive script.
@@ -83,7 +83,7 @@ function shib_auth_page_alter() {
     drupal_add_js($base . '/isPassive.js', array('scope' => 'footer'));
     print drupal_get_js();
   }
-} //function shib_auth_page_alter
+}
 
 /**
  * Implements hook_help().
@@ -103,7 +103,7 @@ function shib_auth_help($path, $arg) {
       break;
   }
   return $output;
-} //function shib_auth_help
+}
 
 /**
  * Errors out.
@@ -122,7 +122,7 @@ function shib_auth_help($path, $arg) {
 function shib_auth_error($msg = '') {
   drupal_set_message(filter_xss(t("[Shibboleth authentication] %msg", array('%msg' => $msg))), 'error');
   return FALSE;
-} // function shib_auth_error
+}
 
 /**
  * Unset session variables and destroy them.
@@ -151,7 +151,7 @@ function shib_auth_terminate_session($msg = '') {
   }
   // Break the request processing to avoid cached content to be served.
   drupal_goto();
-} //function shib_auth_terminate_session
+}
 
 /**
  * Destroys the user session under certain conditions.
@@ -202,7 +202,7 @@ function shib_auth_session_check($uname) {
     }
   }
   return TRUE;
-} // function shib_auth_session_check
+}
 
 /**
  * Determines if the called page is in the debug path.
@@ -255,7 +255,7 @@ function shib_auth_debug() {
       drupal_set_message(t('!msg', array('!msg' => $debug_message)));
     }
   }
-} //function shib_auth_debug
+}
 
 /**
  * Get IdP name.
@@ -274,7 +274,7 @@ function shib_auth_get_idp() {
     return $_SERVER['HTTP_SHIBIDENTITYPROVIDER'];
   }
   return '';
-} //function shib_auth_get_idp
+}
 
 /**
  * Checks whether Shibboleth SP has set the Identity Provider $_SERVER field.
@@ -286,7 +286,7 @@ function shib_auth_get_idp() {
  */
 function shib_auth_session_valid() {
   return (bool) shib_auth_get_idp();
-} // function shib_auth_session_valid
+}
 
 /**
  * Saves an entry into shib_authmap and also saves mail if changed.
@@ -368,7 +368,7 @@ function shib_auth_save_authmap($uname, $custom_uname, $umail_single) {
       drupal_set_message(t('Account successfully linked to new shibboleth id!'));
     }
   }
-} //function shib_auth_save_authmap
+}
 
 /**
  * Login an user based on the shib_authmap informations.
@@ -448,7 +448,7 @@ function shib_login_authmap($uname, $umail_single, $uid, $alreadyloggedin = FALS
   // Redirect user to a predefined page, or a page, she wanted to see before
   // clicking on login.
   shib_auth_submit_redirect();
-} //function shib_login_authmap
+}
 
 /**
  * Check user identifier.
@@ -470,7 +470,7 @@ function shib_auth_check_identifier($uname) {
     return FALSE;
   }
   return TRUE;
-} //function shib_auth_check_identifier
+}
 
 /**
  * Load an authmap user object from shib_authmap.
@@ -484,7 +484,7 @@ function shib_auth_load_from_authmap($uname) {
     ->condition('targeted_id', $uname, '=')
     ->execute()
     ->fetchAssoc();
-} //function shib_auth_load_from_authmap
+}
 
 /**
  * User Data Customization function - MAIL.
@@ -511,7 +511,7 @@ function shib_auth_custom_mail($uname, $custom_username = '', $custom_mail = '')
   elseif ((shib_auth_config('define_username') == 1) && $custom_username) {
     shib_auth_custom_username($uname, $custom_username, $custom_mail);
   }
-} //function shib_auth_custom_mail
+}
 
 /**
  * User Data Customization function - USERNAME.
@@ -547,7 +547,7 @@ function shib_auth_custom_username($uname, $custom_username = '', $umail_single 
       shib_auth_save_authmap($uname, $custom_username, $umail_single);
     }
   }
-} //function shib_auth_custom_username
+}
 
 /**
  * User Data Customization function - Redirect user to the custom form.
@@ -566,7 +566,7 @@ function shib_auth_goto_custom_form() {
     }
     drupal_goto('shib_auth/get_custom_data');
   }
-} //function shib_auth_goto_custom_form
+}
 
 /**
  * User Data Customization function - Redirect user to the appropriate page.
@@ -580,7 +580,7 @@ function shib_auth_submit_redirect() {
     unset($_SESSION['shib_auth_custom_form_url']);
     drupal_goto($redirect_url);
   }
-} //function shib_auth_submit_redirect
+}
 
 /**
  * Redirects the user when Cancel button is pressed.
@@ -675,7 +675,7 @@ function shib_auth_custom_form($umail_single = NULL, $uname = NULL) {
   else {
     return FALSE;
   }
-} //function shib_auth_custom_form
+}
 
 /**
  * Updates the accepted consent version number of the user to the current one.
@@ -694,7 +694,7 @@ function shib_auth_consent_update($uname, $umail_single, $uid) {
     ->condition('targeted_id', $uname)
     ->execute();
   shib_login_authmap($uname, $umail_single, $uid);
-} //function shib_auth_consent_update
+}
 
 /**
  * Assign roles to the user's session.
@@ -853,7 +853,7 @@ function shib_auth_init() {
     unset($_SESSION['shib_auth_account_linking']);
     drupal_set_message(t('End of account linking session'));
   }
-}// function shib_auth_init()
+}
 
 /**
  * Redirects user to the handler url, and handles return option.
@@ -877,7 +877,7 @@ function shib_auth_redirect($handlerurl, $return = NULL) {
   }
 
   drupal_goto($handler[0], array('query' => $options, 'absolute' => TRUE));
-}//shib_auth_redirect()
+}
 
 /**
  * Implements hook_exit().
@@ -940,7 +940,7 @@ function shib_auth_get_handler_base() {
     }
     return $handlerprotocol . '://' . $_SERVER['SERVER_NAME'] . $handlerurl;
   }
-} //function shib_auth_get_handler_base
+}
 
 /**
  * Logs users out from the Shibboleth authority.
@@ -966,7 +966,7 @@ function shib_auth_user_delete($account) {
   db_delete('shib_authmap')
     ->condition('uid', $account->uid)
     ->execute();
-} // function shib_auth_user
+}
 
 /**
  * Implements hook_permission().
@@ -978,7 +978,7 @@ function shib_auth_permission() {
       'description' => t('Admin the shibboleth authentication module settings page.'),
     ),
   );
-} // function shib_auth_permission()
+}
 
 /**
  * Generates shibboleth login url based on configuration.
@@ -1008,7 +1008,7 @@ function shib_auth_generate_login_url() {
   }
 
   return check_url($sessioninitiator . $sep . "target=" . urlencode($url_to_return) . $forceauthn);
-} //function shib_auth_generate_login_url()
+}
 
 /**
  * Implements hook_menu().
@@ -1118,7 +1118,7 @@ function shib_auth_menu() {
   );
 
   return $items;
-} // function shib_auth_menu
+}
 
 /**
  * Implements hook_block_info().
@@ -1133,7 +1133,7 @@ function shib_auth_block_info() {
     'region'     => '',
   );
   return $blocks;
-} //function shib_auth_block_info
+}
 
 /**
  * Implements hook_block_configure().
@@ -1152,7 +1152,7 @@ function shib_auth_block_configure($delta = '') {
       );
   }
   return $form;
-} //function shib_auth_block_configure
+}
 
 /**
  * Implements hook_block_save().
@@ -1162,7 +1162,7 @@ function shib_auth_block_save($delta = '', $edit = array()) {
     case 'login_box':
       variable_set('shib_auth_link_text', $edit['shib_auth_link_text']);
   }
-} //function shib_auth_block_save
+}
 
 /**
  * Implements hook_block_view().
@@ -1179,7 +1179,7 @@ function shib_auth_block_view($delta = '') {
       break;
   }
   return $block;
-} //function shib_auth_block_view
+}
 
 /**
  * Generate the login block content if user not logged in.
@@ -1199,7 +1199,7 @@ function _login_url_html($is_account_linking = FALSE) {
     return theme('shib_login_block', array('login_url' => url('shib_link'), 'login_text' => filter_xss(shib_auth_config('account_linking_text'))));
   }
   return NULL;
-} //function _login_url_html
+}
 
 /**
  * Alters user_login form for the shibboleth authentication module.
@@ -1230,14 +1230,14 @@ function shib_auth_form_alter(array &$form, array &$form_state, $form_id) {
   if ($form_id == 'user_admin_role') {
     shib_auth_generate_rolenames(TRUE);
   }
-} //function shib_auth_form_alter
+}
 
 /**
  * Dummy access argument function.
  */
 function access_shib_login() {
   return shib_auth_session_valid();
-} //function access_shib_login
+}
 
 /**
  * Implements hook_theme().
@@ -1252,7 +1252,7 @@ function shib_auth_theme($existing, $type, $theme, $path) {
       ),
     ),
   );
-} //function shib_auth_theme
+}
 
 /**************** ROLE ASSIGNMENT FUNCTIONS  *******************/
 
@@ -1301,7 +1301,7 @@ function shib_auth_assignroles() {
     drupal_static_reset('menu_get_item');
   }
   $_SESSION['shib_auth_rolelog'] = '1';
-} //function shib_auth_assignroles
+}
 
 /**
  * This function processes role assignment rules.
@@ -1368,7 +1368,7 @@ function shib_auth_process_rule($rule) {
   }
 
   return $profile_changed;
-} //function shib_auth_process_rule()
+}
 
 /**
  * Saves changes to users' roles.
@@ -1400,7 +1400,7 @@ function shib_auth_save_roles() {
       }
     }
   }
-} //function shib_auth_save_roles()
+}
 
 /**
  * Saves changes to user's email.
@@ -1453,7 +1453,7 @@ function shib_auth_save_mail($account, $mail) {
   user_module_invoke('after_update', $null, $account);
 
   return $account;
-} // function shib_auth_save_mail()
+}
 
 /**
  * Generate role name cache.
@@ -1478,7 +1478,7 @@ function shib_auth_generate_rolenames($force) {
 
     $_SESSION['shib_auth_rolecache'] = $rolecache;
   }
-} //function shib_auth_generate_rolenames()
+}
 
 /**
  * Retrieve role name from role id using the role cache.
@@ -1497,7 +1497,7 @@ function shib_auth_get_rolename($rid) {
   // For some reason we don't have the name for the role id.
   shib_auth_error("Internal error: no name for role_id '$rid'");
   return NULL;
-} //function shib_auth_get_rolename()
+}
 
 /**
  * Retrieves a variable from the environment ($_SERVER).
@@ -1507,7 +1507,7 @@ function shib_auth_get_rolename($rid) {
  * Shibboleth and mod_rewrite is responsible for filtering out evil environment
  * variables.
  *
- * @param string $var
+ * @param string|bool $var
  *   Environment variable name.
  *
  * @return string|null
@@ -1537,4 +1537,4 @@ function shib_auth_getenv($var = FALSE) {
   }
 
   return NULL;
-} //function shib_auth_getenv()
+}

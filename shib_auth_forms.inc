@@ -115,7 +115,7 @@ function shib_auth_admin_general($form, &$form_state) {
   );
 
   return system_settings_form($form);
-} // function shib_auth_admin_general()
+}
 
 /**
  * Form constructor for the shib_auth custom form.
@@ -217,7 +217,7 @@ function shib_auth_custom_data($form, &$form_state) {
   );
 
   return $form;
-} // function shib_auth_custom_data()
+}
 
 /**
  * Form validation handler for shib_auth_custom_data()
@@ -240,7 +240,7 @@ function shib_auth_custom_data_validate($form, &$form_state) {
       form_set_error('', t('You have to accept Terms of Use to proceed.'));
     }
   }
-} // shib_auth_custom_email_validate()
+}
 
 /**
  * This function prevents drupal loading a cached page after shibboleth login.
