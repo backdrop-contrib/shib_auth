@@ -13,7 +13,6 @@
  *  actions which can be done with each role.
  */
 function _shib_auth_list_rules() {
-  $output = NULL;
   $rows = array();
 
   // If the admin is not logged in through shibboleth, rolename cache has to be
@@ -27,21 +26,19 @@ function _shib_auth_list_rules() {
 
   while ($rule = $rules->fetchAssoc()) {
     $roles = unserialize($rule['role']);
-    $roles_list = '';
+    $roles_list = array();
 
     foreach ($roles as $role) {
       if (!empty($role)) {
-        $roles_list .= shib_auth_get_rolename($role) . ', ';
+        $roles_list[] = shib_auth_get_rolename($role);
       }
     }
-    // Cut off the last ', ' charaters.
-    $roles_list = drupal_substr($roles_list, 0, -2);
 
-    $rule['sticky'] == 1 ? $sticky = 'Yes' : $sticky = 'No';
+    $sticky = $rule['sticky'] == 1 ? 'Yes' : 'No';
     $rows[] = array(
       $rule['field'],
       urldecode($rule['regexpression']),
-      $roles_list,
+      implode(', ', $roles_list),
       $sticky,
       l(t('Clone'), 'admin/config/people/shib_auth/clone/' . $rule['id']) . ' | ' .
       l(t('Edit'), 'admin/config/people/shib_auth/edit/' . $rule['id']) . ' | ' .
@@ -50,7 +47,7 @@ function _shib_auth_list_rules() {
   }
 
   // Create the rule list in HTML table.
-  $attributes = array('class' => 'shib_auth_role_table');
+  $attributes = array('class' => array('shib_auth_role_table'));
   $header = array(
     t('Attribute'),
     t('RegExp'),
@@ -58,18 +55,13 @@ function _shib_auth_list_rules() {
     t('Sticky'),
     t('Actions'),
   );
-  $output = theme_table(
-              array(
-                'header'     => $header,
-                'rows'       => $rows,
-                'attributes' => $attributes,
-                'empty'      => t('There is no rule in the database'),
-                // Beacuse the theme_table hastly implemented.
-                'caption'    => NULL,
-                'colgroups'  => NULL,
-                'sticky'     => NULL,
-              )
-            );
+  $output = theme('table', array(
+    'header'     => $header,
+    'rows'       => $rows,
+    'attributes' => $attributes,
+    'empty'      => t('There are no rules in the database.'),
+    'sticky'     => FALSE,
+  ));
   $output .= l(t('Add new rule'), 'admin/config/people/shib_auth/new');
 
   return $output;
