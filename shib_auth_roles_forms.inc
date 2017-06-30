@@ -15,7 +15,7 @@
 function _shib_auth_list_rules() {
   $rows = array();
 
-  // If the admin is not logged in through shibboleth, rolename cache has to be
+  // If the admin is not logged in through shibboleth, role name cache has to be
   // generated.
   shib_auth_generate_rolenames(TRUE);
 
@@ -152,7 +152,7 @@ function _shib_auth_rule_clone_confirm_form_submit($form, &$form_state) {
 }
 
 /**
- * Generate the shibboleth rule adding form.
+ * Generates the shibboleth rule adding form.
  *
  * @param array $options
  *   Contains the data, we want to fill the form with.
@@ -243,7 +243,7 @@ function shib_auth_new_rule_submit($form, &$form_state) {
 }
 
 /**
- * Cunstructor of the rule edit form.
+ * Constructor of the rule edit form.
  */
 function shib_auth_edit_rule($form, &$form_state) {
   $id = $form_state['build_info']['args'][0];

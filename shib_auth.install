@@ -54,7 +54,7 @@ function shib_auth_schema() {
   $schema = array();
 
   $schema['shib_authmap'] = array(
-    'description' => 'Stores shibboleth authentication mapping from persistend IDs to drupal users.',
+    'description' => 'Stores shibboleth authentication mapping from persistent IDs to drupal users.',
     'fields' => array(
       'id' => array(
         'type' => 'serial',
@@ -80,7 +80,7 @@ function shib_auth_schema() {
         'type' => 'varchar',
         'length' => 255,
         'default' => '',
-        'description' => 'The IdP, the user got her creditentials',
+        'description' => 'The IdP, the user got her credentials',
       ),
       'consentver' => array(
         'type' => 'varchar',

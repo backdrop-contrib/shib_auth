@@ -98,7 +98,7 @@ function _shib_auth_update_fields($op) {
         continue;
       }
 
-      /*  Replace all [foo] occurences if "foo" is a Shibboleth attribute
+      /*  Replace all [foo] occurrences if "foo" is a Shibboleth attribute
       (header, CGI environment variable) i.e. $_SERVER[foo] exists, with
       the corresponding attribute value.
       If the attribute doesn't exist, it will remain unmolested ("[foo]").

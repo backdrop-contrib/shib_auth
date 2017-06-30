@@ -31,21 +31,21 @@ function shib_auth_admin_general($form, &$form_state) {
     '#type'          => 'textfield',
     '#title'         => t('Shibboleth login handler URL'),
     '#default_value' => shib_auth_config('full_handler_url'),
-    '#description'   => t('The URL can be absolute or relative to the server base url: http://www.example.com/Shibboleth.sso/DS; /Shibboleth.sso/DS'),
+    '#description'   => t('The URL can be absolute or relative to the server base URL: http://www.example.com/Shibboleth.sso/DS; /Shibboleth.sso/DS'),
   );
 
   $form['shib_handler_settings']['shib_auth_full_logout_url'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Shibboleth logout handler URL'),
     '#default_value' => shib_auth_config('full_logout_url'),
-    '#description'   => t('The URL can be absolute or relative to the server base url: http://www.example.com/Shibboleth.sso/Logout; /Shibboleth.sso/Logout'),
+    '#description'   => t('The URL can be absolute or relative to the server base URL: http://www.example.com/Shibboleth.sso/Logout; /Shibboleth.sso/Logout'),
   );
 
   $form['shib_handler_settings']['shib_auth_link_text'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Shibboleth login link text'),
     '#default_value' => shib_auth_config('link_text'),
-    '#description'   => t('The text of the login link. You can change this text on the Shibbolet login block settings form too!'),
+    '#description'   => t('The text of the login link. You can change this text on the Shibboleth login block settings form too!'),
   );
 
   $form['shib_handler_settings']['shib_auth_force_https'] = array(
@@ -63,21 +63,21 @@ function shib_auth_admin_general($form, &$form_state) {
 
   $form['shib_attribute_settings']['shib_auth_email_variable'] = array(
     '#type'          => 'textfield',
-    '#title'         => t('Server variable for e-mail address'),
+    '#title'         => t('Server variable for email address'),
     '#default_value' => shib_auth_config('email_variable'),
   );
 
   $form['shib_attribute_settings']['shib_auth_define_username'] = array(
     '#type'          => 'checkbox',
-    '#title'         => t('User-defined usernames'),
-    '#description'   => t('Allow users to set their Drupal usernames at first Shibboleth login. Note that disabling this option only prevents new users from registering their own username. Existing user-defined usernames will remain valid.'),
+    '#title'         => t('User-defined username'),
+    '#description'   => t('Allow users to set their Drupal username at first Shibboleth login. Note that disabling this option only prevents new users from registering their own username. Existing user-defined usernames will remain valid.'),
     '#default_value' => shib_auth_config('define_username'),
   );
 
   $form['shib_attribute_settings']['shib_auth_enable_custom_mail'] = array(
     '#type'          => 'checkbox',
-    '#title'         => t('User-defined e-mail addresses'),
-    '#description'   => t('Ask users to set their contact email address at first login. Disabling this option will override contact address with the one, which was received from IdP. (In this case, missing e-mail address will result in fatal error.)'),
+    '#title'         => t('User-defined email addresses'),
+    '#description'   => t('Ask users to set their contact email address at first login. Disabling this option will override contact address with the one, which was received from IdP. (In this case, missing email address will result in fatal error.)'),
     '#default_value' => shib_auth_config('enable_custom_mail'),
   );
 
@@ -120,7 +120,7 @@ function shib_auth_admin_general($form, &$form_state) {
 /**
  * Form constructor for the shib_auth custom form.
  *
- * Generate the custom e-mail and username provider form.
+ * Generate the custom email and username provider form.
  *
  * @see shib_auth_custom_data_validate()
  * @see shib_auth_custom_data_submit()
@@ -181,7 +181,7 @@ function shib_auth_custom_data($form, &$form_state) {
       // Mail textfield is writable, if define_username variable is true.
       $form['custom_mail'] = array(
         '#type'          => 'textfield',
-        '#title'         => t('E-mail'),
+        '#title'         => t('Email'),
         '#default_value' => shib_auth_getenv(shib_auth_config('email_variable')),
         '#size'          => 60,
       );
@@ -189,7 +189,7 @@ function shib_auth_custom_data($form, &$form_state) {
     // Mail textfield is not writable, if define_username variable is false.
     else {
       $form['custom_mailm'] = array(
-        '#markup' => t('<b>E-mail:</b> <br />'),
+        '#markup' => '<b>' . t('Email:') . '</b><br />',
       );
 
       $form['custom_mail'] = array(
@@ -225,7 +225,7 @@ function shib_auth_custom_data($form, &$form_state) {
 function shib_auth_custom_data_validate($form, &$form_state) {
   if (shib_auth_config('enable_custom_mail')) {
     if ($form_state['values']['custom_mail'] == '') {
-      form_set_error('', t("You have to fill the 'E-mail' field."));
+      form_set_error('', t("You have to fill the 'Email' field."));
     }
   }
 
@@ -320,7 +320,7 @@ function shib_auth_admin_advanced() {
     '#type'          => 'textfield',
     '#title'         => t("URL to redirect to after login"),
     '#default_value' => shib_auth_config('login_url'),
-    '#description'   => t("The URL can be absolute or relative to the server base url. The relative paths will be automatically extended with the site base URL. If this value is empty than the user will be redirected to the originally requested page."),
+    '#description'   => t("The URL can be absolute or relative to the server base URL. The relative paths will be automatically extended with the site base URL. If this value is empty than the user will be redirected to the originally requested page."),
   );
 
   $form['shib_logout_settings'] = array(
@@ -333,7 +333,7 @@ function shib_auth_admin_advanced() {
     '#type'          => 'textfield',
     '#title'         => t("URL to redirect to after logout"),
     '#default_value' => shib_auth_config('logout_url'),
-    '#description'   => t("The URL can be absolute or relative to the server base url. The relative paths will be automatically extended with the site base URL. If you are using SLO, this setting is probably useless (depending on the IdP)"),
+    '#description'   => t("The URL can be absolute or relative to the server base URL. The relative paths will be automatically extended with the site base URL. If you are using SLO, this setting is probably useless (depending on the IdP)"),
   );
 
   $form['shib_terms_conditions_settings'] = array(

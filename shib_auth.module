@@ -300,7 +300,7 @@ function shib_auth_session_valid() {
  * @param string $custom_uname
  *   The customized username.
  * @param string $umail_single
- *   The first e-mail address of the user from the IdP.
+ *   The first email address of the user from the IdP.
  */
 function shib_auth_save_authmap($uname, $custom_uname, $umail_single) {
   global $user;
@@ -313,7 +313,7 @@ function shib_auth_save_authmap($uname, $custom_uname, $umail_single) {
 
   // If the mail address is used, give an error.
   if ($email_already_used && !(!empty($_SESSION['shib_auth_account_linking']) && $email_already_used->uid == $user->uid)) {
-    shib_auth_error('[shib_auth_save_authmap] Error saving user account. E-mail address is already used.');
+    shib_auth_error('[shib_auth_save_authmap] Error saving user account. Email address is already used.');
   }
   // Else register the user with the given information.
   else {
@@ -354,7 +354,7 @@ function shib_auth_save_authmap($uname, $custom_uname, $umail_single) {
       ->execute();
 
     if (!shib_auth_config('enable_custom_mail') || empty($_SESSION['shib_auth_account_linking'])) {
-      // Rewrite e-mail address.
+      // Rewrite email address.
       $user = shib_auth_save_mail($user, $umail_single);
       if (!$user) {
         // Something really bad happened.
@@ -371,12 +371,12 @@ function shib_auth_save_authmap($uname, $custom_uname, $umail_single) {
 }
 
 /**
- * Login an user based on the shib_authmap informations.
+ * Login a user based on the shib_authmap information.
  *
  * @param string $uname
  *   The username got from IdP.
  * @param string $umail_single
- *   The first e-mail address of the user from the IdP.
+ *   The first email address of the user from the IdP.
  * @param int $uid
  *   Drupal user id.
  * @param bool $alreadyloggedin
@@ -407,7 +407,7 @@ function shib_login_authmap($uname, $umail_single, $uid, $alreadyloggedin = FALS
         $_SESSION['shib_auth_authentication'] = 'shib_auth';
         // Shibboleth mail address override was enabled in the admin config.
         if (shib_auth_config('enable_custom_mail') == 0) {
-          // Check if there isn't any user with this e-mail (whose name is
+          // Check if there isn't any user with this email (whose name is
           // different).
           $email_for_other_user = db_select('users', 'c')
             ->fields('c')
@@ -417,9 +417,9 @@ function shib_login_authmap($uname, $umail_single, $uid, $alreadyloggedin = FALS
             ->fetchObject();
 
           if ($email_for_other_user) {
-            shib_auth_error('[shib_login_authmap] Error saving user account. E-mail address is already used.');
+            shib_auth_error('[shib_login_authmap] Error saving user account. Email address is already used.');
           }
-          // If everything is allright, modify the mail address of the user.
+          // If everything is alright, modify the mail address of the user.
           else {
             $user = shib_auth_save_mail($user, $umail_single);
             if (!$user) {
@@ -473,7 +473,7 @@ function shib_auth_check_identifier($uname) {
 }
 
 /**
- * Load an authmap user object from shib_authmap.
+ * Loads an authmap user object from shib_authmap.
  *
  * @return array|null
  *   The authmap item in array if found, NULL otherwise.
@@ -496,11 +496,11 @@ function shib_auth_load_from_authmap($uname) {
  * @param string $custom_username
  *   The customized username.
  * @param string $custom_mail
- *   The first e-mail address of the user from the IdP.
+ *   The first email address of the user from the IdP.
  */
 function shib_auth_custom_mail($uname, $custom_username = '', $custom_mail = '') {
   if (!valid_email_address($custom_mail)) {
-    shib_auth_error('Please enter a valid e-mail address');
+    shib_auth_error('Please enter a valid email address');
   }
   // If custom username not enabled.
   elseif (shib_auth_config('define_username') == 0) {
@@ -523,7 +523,7 @@ function shib_auth_custom_mail($uname, $custom_username = '', $custom_mail = '')
  * @param string $custom_username
  *   The customized username.
  * @param string $umail_single
- *   The first e-mail address of the user from the IdP.
+ *   The first email address of the user from the IdP.
  */
 function shib_auth_custom_username($uname, $custom_username = '', $umail_single = '') {
   // Validate it.
@@ -542,7 +542,7 @@ function shib_auth_custom_username($uname, $custom_username = '', $umail_single 
       shib_auth_error('Error saving user account. User name is already used.');
     }
     // Register the user with the given username, and the shib provided
-    // e-mail address.
+    // email address.
     else {
       shib_auth_save_authmap($uname, $custom_username, $umail_single);
     }
@@ -552,8 +552,8 @@ function shib_auth_custom_username($uname, $custom_username = '', $umail_single 
 /**
  * User Data Customization function - Redirect user to the custom form.
  *
- * This function redirects user to the custom data form, remembering the url,
- * she wanted to visit before registering or a specific login url, if it is set.
+ * This function redirects user to the custom data form, remembering the URL,
+ * she wanted to visit before registering or a specific login URL, if it is set.
  */
 function shib_auth_goto_custom_form() {
   if ($_GET['q'] != 'shib_auth/get_custom_data' && $_GET['q'] != 'shib_link') {
@@ -571,8 +571,8 @@ function shib_auth_goto_custom_form() {
 /**
  * User Data Customization function - Redirect user to the appropriate page.
  *
- * This function redirects user to the url, she wanted to visit before
- * registering or to login url, if it is set.
+ * This function redirects the user to the URL, she wanted to visit before
+ * registering or to login URL, if it is set.
  */
 function shib_auth_submit_redirect() {
   if (isset($_SESSION['shib_auth_custom_form_url'])) {
@@ -605,11 +605,11 @@ function shib_auth_cancel_custom() {
  *
  * If any customization or consent option is enabled, the custom form will show
  * up before registering and forces the user to accept user consent and define
- * username and/or e-mail address (prefilling fields with the data coming from
+ * username and/or email address (pre-filling fields with the data coming from
  * the IdP).
  *
  * @param string $umail_single
- *   The first e-mail address of the user from the IdP.
+ *   The first email address of the user from the IdP.
  * @param string $uname
  *   Username received from IdP.
  */
@@ -683,7 +683,7 @@ function shib_auth_custom_form($umail_single = NULL, $uname = NULL) {
  * @param string $uname
  *   Username received from IdP.
  * @param string $umail_single
- *   The first e-mail address of the user from the IdP.
+ *   The first email address of the user from the IdP.
  * @param string $uid
  *   Drupal UserID.
  */
@@ -697,7 +697,7 @@ function shib_auth_consent_update($uname, $umail_single, $uid) {
 }
 
 /**
- * Assign roles to the user's session.
+ * Assigns roles to the user's session.
  */
 function shib_auth_role_assignment() {
   // Generate role cache if it doesn't exists.
@@ -710,7 +710,7 @@ function shib_auth_role_assignment() {
 /**
  * Creates a new user, if necessary, based on information from the handler.
  *
- * Create a new user based on informations from the Shibboleth handler if it's
+ * Create a new user based on information from the Shibboleth handler if it's
  * necessary or log in.
  * If already authenticated - do nothing.
  * If Shibboleth doesn't provide User information - error message.
@@ -720,7 +720,7 @@ function shib_auth_role_assignment() {
  *  this user.
  * If there's no mail attribute, ask for the mail address on a generated form if
  *  mail override (shib_auth_req_shib_only) is disabled.
- * In this case, the account will be created with this e-mail address.
+ * In this case, the account will be created with this email address.
  */
 function shib_auth_init() {
   global $user;
@@ -753,12 +753,12 @@ function shib_auth_init() {
     return;
   }
 
-  /* Time to retrevie the mail and begin some work */
+  /* Time to retrieve the mail and begin some work */
   $umail = shib_auth_getenv(shib_auth_config('email_variable')) ? shib_auth_getenv(shib_auth_config('email_variable')) : '';
   // Get the first one if there're many.
   $umail_single = preg_replace('/;.*/', '', $umail);
 
-  // ************ ROLE ASSIGMENT  **************.
+  // ************ ROLE ASSIGNMENT  **************.
   shib_auth_role_assignment();
 
   // **************** DEBUG ********************.
@@ -816,9 +816,9 @@ function shib_auth_init() {
   // The user doesn't exists in the database, starting registering process.
   else {
     // If it is account linking and the terms are accepted or forcing an
-    // existing user to accept termsandconditions.
-    // If we have an e-mail address from the shib server, and there isn't
-    // any user with this address, create an account with these infos.
+    // existing user to accept terms and conditions.
+    // If we have an email address from the shib server, and there isn't
+    // any user with this address, create an account with this information.
     if (!empty($_SESSION['shib_auth_account_linking'])
         || $umail_single
         && !shib_auth_config('enable_custom_mail')
@@ -842,7 +842,7 @@ function shib_auth_init() {
     // If there is no custom mail option enabled, and we didn't received email
     // address from server, output an error.
     else {
-      shib_auth_error('E-mail address is missing. Please contact your site administrator!');
+      shib_auth_error('Email address is missing. Please contact your site administrator!');
     }
   }
   // ****** ASSIGN ROLES AFTER REGISTER *******.
@@ -856,7 +856,7 @@ function shib_auth_init() {
 }
 
 /**
- * Redirects user to the handler url, and handles return option.
+ * Redirects the user to the handler URL, and handles return option.
  *
  * @param string $handlerurl
  *   URL of the login / logout handler.
@@ -957,10 +957,7 @@ function shib_auth_user_logout() {
 }
 
 /**
- * Let the user delet from the Drupal site.
- *
- * @param object $account
- *   The user object on which the operation is being performed.
+ * Implements hook_user_delete().
  */
 function shib_auth_user_delete($account) {
   db_delete('shib_authmap')
@@ -981,7 +978,7 @@ function shib_auth_permission() {
 }
 
 /**
- * Generates shibboleth login url based on configuration.
+ * Generates shibboleth login URL based on configuration.
  */
 function shib_auth_generate_login_url() {
   $queries = $_GET;
@@ -996,7 +993,7 @@ function shib_auth_generate_login_url() {
 
   $queries['q'] = 'shib_login/' . $queries['q'];
 
-  // Generate the currently viewed url to pass as an url to return from IdP.
+  // Generate the currently viewed URL to pass as a URL to return from IdP.
   $url_to_return = (isset($_SERVER['HTTPS'])||
                    (shib_auth_config('force_https') && drupal_substr($sessioninitiator, 0, 5) == 'https') ?
                    'https' : 'http')
@@ -1185,7 +1182,7 @@ function shib_auth_block_view($delta = '') {
  * Generate the login block content if user not logged in.
  *
  * @param bool $is_account_linking
- *   TRUE if accunt linking is active and FALSE if not.
+ *   TRUE if account linking is active and FALSE if not.
  */
 function _login_url_html($is_account_linking = FALSE) {
   global $user;
@@ -1422,7 +1419,7 @@ function shib_auth_save_mail($account, $mail) {
     return FALSE;
   }
   if (!valid_email_address($mail)) {
-    shib_auth_error('E-mail address is invalid');
+    shib_auth_error('Email address is invalid');
     return FALSE;
   }
 
@@ -1456,7 +1453,7 @@ function shib_auth_save_mail($account, $mail) {
 }
 
 /**
- * Generate role name cache.
+ * Generates role name cache.
  *
  * Retrieves all roles from database and stores the id->name mapping in the
  * users' session.
@@ -1481,7 +1478,7 @@ function shib_auth_generate_rolenames($force) {
 }
 
 /**
- * Retrieve role name from role id using the role cache.
+ * Retrieves role name from role id using the role cache.
  *
  * @param int $rid
  *   The id of the role.
