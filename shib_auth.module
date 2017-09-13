@@ -444,6 +444,7 @@ function shib_login_authmap($uname, $umail_single, $uid, $alreadyloggedin = FALS
   }
   else {
     shib_auth_error('Couldn\'t login user: ' . $authmap_username['name']);
+    watchdog('shib_auth', 'Username "@name" could not be found in authmap table', array('@name' => $authmap_username['name']), WATCHDOG_NOTICE);
   }
   // Redirect user to a predefined page, or a page, she wanted to see before
   // clicking on login.
