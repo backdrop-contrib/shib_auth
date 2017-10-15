@@ -223,22 +223,16 @@ function shib_auth_custom_data($form, &$form_state) {
  * Form validation handler for shib_auth_custom_data()
  */
 function shib_auth_custom_data_validate($form, &$form_state) {
-  if (shib_auth_config('enable_custom_mail')) {
-    if ($form_state['values']['custom_mail'] == '') {
-      form_set_error('', t("You have to fill the 'Email' field."));
-    }
+  if (shib_auth_config('enable_custom_mail') && empty($form_state['values']['custom_mail'])) {
+    form_set_error('', t("You have to fill the 'Email' field."));
   }
 
-  if (shib_auth_config('define_username')) {
-    if ($form_state['values']['custom_username'] == '') {
-      form_set_error('', t("You have to fill the 'Username' field."));
-    }
+  if (shib_auth_config('define_username') && empty($form_state['values']['custom_username'])) {
+    form_set_error('', t("You have to fill the 'Username' field."));
   }
 
-  if (shib_auth_config('terms_accept')) {
-    if ($form_state['values']['accept'] == FALSE) {
-      form_set_error('', t('You have to accept Terms of Use to proceed.'));
-    }
+  if (shib_auth_config('terms_accept') && empty($form_state['values']['accept'])) {
+    form_set_error('', t('You have to accept Terms of Use to proceed.'));
   }
 }
 
