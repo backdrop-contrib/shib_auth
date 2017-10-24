@@ -149,8 +149,9 @@ function shib_auth_terminate_session($msg = '') {
   if ($msg) {
     shib_auth_error($msg);
   }
-  // Break the request processing to avoid cached content to be served.
-  drupal_goto();
+  // Break the request processing to avoid cached content to be served and
+  // redirect to the current page.
+  drupal_goto(drupal_get_destination());
 }
 
 /**
