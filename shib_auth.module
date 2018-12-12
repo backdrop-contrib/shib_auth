@@ -58,7 +58,7 @@ function shib_auth_config($variable, $list = FALSE) {
   }
 
   // Check, if it exists in the array above, and get its value.
-  if (array_key_exists($variable, $var_store)) {
+  if (isset($var_store[$variable]) || array_key_exists($variable, $var_store)) {
     return variable_get("shib_auth_$variable", $var_store[$variable]);
   }
   else {
@@ -1521,20 +1521,20 @@ function shib_auth_getenv($var = FALSE) {
   }
 
   // foo-bar.
-  if (array_key_exists($var, $_SERVER)) {
+  if (isset($_SERVER[$var]) || array_key_exists($var, $_SERVER)) {
     return $_SERVER[$var];
   }
 
   // REDIRECT_foo_bar.
   $var = "REDIRECT_" . str_replace('-', '_', $var);
-  if (array_key_exists($var, $_SERVER)) {
+  if (isset($_SERVER[$var]) || array_key_exists($var, $_SERVER)) {
     return $_SERVER[$var];
   }
 
   // HTTP_FOO_BAR.
   $var = strtoupper($var);
   $var = preg_replace('/^REDIRECT/', 'HTTP', $var);
-  if (array_key_exists($var, $_SERVER)) {
+  if (isset($_SERVER[$var]) || array_key_exists($var, $_SERVER)) {
     return $_SERVER[$var];
   }
 
