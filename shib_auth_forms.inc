@@ -127,12 +127,8 @@ function shib_auth_admin_general($form, &$form_state) {
  * @ingroup forms
  */
 function shib_auth_custom_data($form, &$form_state) {
-  global $user;
-
-  // drupal_set_message("Old user, accept, consentver: ".(int)$existing_authmap
-  // .",".(int)$consent_accepted.",".(int)$existing_authmap['consentver'],
-  // 'error');.
   $form = array();
+
   // Decide if the user is already registered, but a new consent version is
   // present.
   $authmap_username = db_select('shib_authmap', 'c')

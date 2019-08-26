@@ -34,7 +34,6 @@ function shib_auth_config($variable, $list = FALSE) {
       'enable_custom_mail' => FALSE,
       'forceauthn' => FALSE,
       'force_https' => FALSE,
-      'auto_destroy_session' => FALSE,
       'is_passive' => FALSE,
       'terms_accept' => FALSE,
       'debug_url' => '',
@@ -74,9 +73,7 @@ function shib_auth_config($variable, $list = FALSE) {
  * configuration page.
  */
 function shib_auth_page_alter() {
-  global $user;
-
-  if (!shib_auth_session_valid() && shib_auth_config('is_passive') && !$user->uid) {
+  if (!shib_auth_session_valid() && shib_auth_config('is_passive') && !user_is_logged_in()) {
     $base = drupal_get_path('module', 'shib_auth');
     $my_settings = array('login_url' => shib_auth_generate_login_url());
     drupal_add_js(array('shib_auth' => $my_settings), array('type' => 'setting', 'scope' => JS_DEFAULT));
@@ -121,7 +118,6 @@ function shib_auth_help($path, $arg) {
  */
 function shib_auth_error($msg = '') {
   drupal_set_message(filter_xss(t("[Shibboleth authentication] %msg", array('%msg' => $msg))), 'error');
-  return FALSE;
 }
 
 /**
@@ -221,7 +217,7 @@ function shib_auth_debug() {
 
   if (shib_auth_config('debug_state')) {
     if (drupal_substr($_GET['q'], 0, drupal_strlen(shib_auth_config('debug_url'))) == shib_auth_config('debug_url')) {
-      if ($user->uid) {
+      if (user_is_logged_in()) {
         $userinfo = array(
           'uid' => $user->uid,
           'name' => $user->name,
@@ -406,7 +402,7 @@ function shib_login_authmap($uname, $umail_single, $uid, $alreadyloggedin = FALS
     // (made redirect loops when linking an account).
     if (!user_is_blocked($account->name)) {
       user_external_login_register($account->name, 'shib_auth');
-      if ($user->uid) {
+      if (user_is_logged_in()) {
         // Set auth variable to shib_auth.
         $_SESSION['shib_auth_authentication'] = 'shib_auth';
         // Shibboleth mail address override was enabled in the admin config.
@@ -693,11 +689,11 @@ function shib_auth_custom_form($umail_single = NULL, $uname = NULL) {
  *   Drupal UserID.
  */
 function shib_auth_consent_update($uname, $umail_single, $uid) {
-  $sql = "UPDATE {shib_authmap} SET consentver='%s' WHERE targeted_id='%s'";
-  $result = db_update('shib_authmap')
+  db_update('shib_authmap')
     ->fields(array('consentver' => shib_auth_config('terms_ver')))
     ->condition('targeted_id', $uname)
     ->execute();
+
   shib_login_authmap($uname, $umail_single, $uid);
 }
 
@@ -728,7 +724,6 @@ function shib_auth_role_assignment() {
  * In this case, the account will be created with this email address.
  */
 function shib_auth_init() {
-  global $user;
 
   // Add theme css.
   drupal_add_css(drupal_get_path('module', 'shib_auth') . '/shib_auth.css');
@@ -770,7 +765,7 @@ function shib_auth_init() {
   shib_auth_debug();
 
   // Do nothing if the user is logged in and we're not doing account linking.
-  if ($user->uid && empty($_SESSION['shib_auth_account_linking'])) {
+  if (user_is_logged_in() && empty($_SESSION['shib_auth_account_linking'])) {
     return;
   }
 
@@ -1191,16 +1186,16 @@ function shib_auth_block_view($delta = '') {
  */
 function _login_url_html($is_account_linking = FALSE) {
   global $user;
-
-  if (!$user->uid && $is_account_linking === FALSE) {
+  $output = '';
+  if (!user_is_logged_in() && $is_account_linking === FALSE) {
     // TODO Please change this theme call to use an associative array for the
     // $variables parameter.
-    return theme('shib_login_block', array('login_url' => shib_auth_generate_login_url(), 'login_text' => filter_xss(shib_auth_config('link_text'))));
+    $output = theme('shib_login_block', array('login_url' => shib_auth_generate_login_url(), 'login_text' => filter_xss(shib_auth_config('link_text'))));
   }
   elseif ($user->uid > 1 && $is_account_linking && shib_auth_config('account_linking')) {
-    return theme('shib_login_block', array('login_url' => url('shib_link'), 'login_text' => filter_xss(shib_auth_config('account_linking_text'))));
+    $output = theme('shib_login_block', array('login_url' => url('shib_link'), 'login_text' => filter_xss(shib_auth_config('account_linking_text'))));
   }
-  return NULL;
+  return $output;
 }
 
 /**
@@ -1382,7 +1377,7 @@ function shib_auth_save_roles() {
   global $user;
 
   // We won't modify system users.
-  if (!$user->uid || $user->uid <= 1) {
+  if ($user->uid <= 1) {
     return;
   }
 
@@ -1393,7 +1388,7 @@ function shib_auth_save_roles() {
 
     foreach (array_keys($user->roles) as $rid) {
       if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-        $id = db_insert('users_roles')
+        db_insert('users_roles')
           ->fields(array(
             'uid' => $user->uid,
             'rid' => $rid,

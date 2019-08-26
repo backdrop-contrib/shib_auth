@@ -247,7 +247,6 @@ function shib_auth_new_rule_submit($form, &$form_state) {
  */
 function shib_auth_edit_rule($form, &$form_state) {
   $id = $form_state['build_info']['args'][0];
-  $form = array();
   // Calls the edit form, with the fields of the existing rule.
   if (is_int((int) $id)) {
     $rule = db_select('shib_auth', 'c')
