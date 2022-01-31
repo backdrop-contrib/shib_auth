@@ -24,7 +24,7 @@ Bugs and Feature requests should be reported in the
 
 ## Credits
 
-- Written for Drupal by Tamás Dévai
+- Written for Drupal by [Tamás Dévai](https://github.com/dorion)
 - Maintained for Drupal by
  [many wonderful people](https://www.drupal.org/node/202617/committers)
 
