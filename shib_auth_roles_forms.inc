@@ -92,17 +92,17 @@ function _shib_auth_rule_delete_confirm_form_submit($form, &$form_state) {
       ->condition('id', $id)
       ->execute();
     if ($ret) {
-      drupal_set_message(t('Rule <strong>#@id</strong> has been deleted.', array('@id' => $id)));
+      backdrop_set_message(t('Rule <strong>#@id</strong> has been deleted.', array('@id' => $id)));
     }
     else {
-      drupal_set_message(t('Failed to delete rule.'), 'error');
+      backdrop_set_message(t('Failed to delete rule.'), 'error');
     }
   }
   else {
-    drupal_set_message(t("Invalid rule id."), 'error');
+    backdrop_set_message(t("Invalid rule id."), 'error');
   }
 
-  drupal_goto('admin/config/people/shib_auth/rules');
+  backdrop_goto('admin/config/people/shib_auth/rules');
 }
 
 /**
@@ -136,19 +136,19 @@ function _shib_auth_rule_clone_confirm_form_submit($form, &$form_state) {
       ->fetchAssoc();
     unset($rule['id']);
 
-    $ret = drupal_write_record('shib_auth', $rule);
+    $ret = backdrop_write_record('shib_auth', $rule);
     if ($ret === SAVED_NEW) {
-      drupal_set_message(t('The rule has been successfully cloned.'));
+      backdrop_set_message(t('The rule has been successfully cloned.'));
     }
     else {
-      drupal_set_message(t('Unexpected error has been detected.'));
+      backdrop_set_message(t('Unexpected error has been detected.'));
     }
   }
   else {
-    drupal_set_message(t("Invalid rule id."), 'error');
+    backdrop_set_message(t("Invalid rule id."), 'error');
   }
 
-  drupal_goto('admin/config/people/shib_auth/rules');
+  backdrop_goto('admin/config/people/shib_auth/rules');
 }
 
 /**
@@ -193,7 +193,7 @@ function shib_auth_edit_form(array $options) {
   $form['shib_auth_roles'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Roles'),
-    '#default_value' => count($options[3]) > 1 || (count($options[3]) == 1 && $options[3] != "") ? $options[3] : array(),
+    '#default_value' => $options[3],
     '#options' => $roles,
   );
 
@@ -220,7 +220,7 @@ function shib_auth_edit_form(array $options) {
  * Creates a new rule by calling universal create/edit form.
  */
 function shib_auth_new_rule($form, &$form_state) {
-  return shib_auth_edit_form(array(0, '', '', '', t('Add rule'), 0));
+  return shib_auth_edit_form(array(0, '', '', array(), t('Add rule'), 0));
 }
 
 /**
@@ -319,26 +319,26 @@ function shib_auth_save_rule(array $form_state, $update) {
   );
 
   // Write it in a record.
-  $ret = drupal_write_record('shib_auth', $new_element, $update);
+  $ret = backdrop_write_record('shib_auth', $new_element, $update);
 
   // If it wasn't an error.
   if (empty($update)) {
     if ($ret === SAVED_NEW) {
-      drupal_set_message(t('New rule has been stored.'));
+      backdrop_set_message(t('New rule has been stored.'));
     }
     else {
-      drupal_set_message(t('Unexpected error has been detected.'));
+      backdrop_set_message(t('Unexpected error has been detected.'));
     }
   }
   // An existing rule was updated.
   else {
     if ($ret === SAVED_UPDATED) {
-      drupal_set_message(t('The rule has been modified.'));
+      backdrop_set_message(t('The rule has been modified.'));
     }
     else {
-      drupal_set_message(t('Unexpected error has been detected.'));
+      backdrop_set_message(t('Unexpected error has been detected.'));
     }
   }
 
-  drupal_goto('admin/config/people/shib_auth/rules');
+  backdrop_goto('admin/config/people/shib_auth/rules');
 }

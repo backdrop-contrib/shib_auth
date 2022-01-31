@@ -2,4 +2,7 @@ name = Shibboleth authentication
 description = "Shibboleth authentication module."
 package = Shibboleth
 core = 7.x
+backdrop = 1.x
+type = module
+
 configure = admin/config/people/shib_auth

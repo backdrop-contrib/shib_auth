@@ -6,46 +6,6 @@
  */
 
 /**
- * Implements hook_uninstall().
- *
- * Hook to uninstall variables and the block, witch were created and used by the
- * module.
- */
-function shib_auth_uninstall() {
-  // Drop variables.
-  $variables = array(
-    'shib_auth_link_text',
-    'shib_auth_handler_url',
-    'shib_auth_handler_protocol',
-    'shib_auth_wayf_uri',
-    'shib_auth_full_handler_url',
-    'shib_auth_full_logout_url',
-    'shib_auth_username_variable',
-    'shib_auth_email_variable',
-    'shib_auth_auto_destroy_session',
-    'shib_auth_logout_url',
-    'shib_auth_login_url',
-    'shib_auth_debug_state',
-    'shib_auth_debug_url',
-    'shib_auth_enable_custom_mail',
-    'shib_auth_define_username',
-    'shib_auth_account_linking',
-    'shib_auth_is_passive',
-    'shib_auth_forceauthn',
-    'shib_auth_terms_accept',
-    'shib_auth_terms_url',
-    'shib_auth_terms_ver',
-    'shib_auth_force_https',
-    'shib_auth_version',
-  );
-  foreach ($variables as $variable) {
-    variable_del($variable);
-  }
-
-  drupal_set_message(t('The Shibboleth authentication module was uninstalled successfully.'));
-}
-
-/**
  * Implements hook_schema().
  *
  * This is how the schema of the module will look like.
@@ -139,74 +99,67 @@ function shib_auth_schema() {
 }
 
 /**
- * Updates the database structure for compatibility with Drupal 7.
- *
- * D7 database API don't support datetime type anymore, so we change the
- * database structure.
+ * Implements hook_update_last_removed().
  */
-function shib_auth_update_7000(&$sandbox) {
-  // Save the created datetime temporaly.
-  $res = db_select('shib_authmap', 'sa')
-    ->fields('sa', array('id', 'created'))
-    ->execute()
-    ->fetchAll();
-
-  // Change to the created column type from datetime to int.
-  db_add_field(
-    'shib_authmap',
-    'created_unix',
-    array(
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => FALSE,
-    )
-  );
-
-  // Fill the database with unixtimestamps.
-  foreach ($res as $row) {
-    if (is_numeric($row->created)) {
-      // Suppose it's already a timestamp, see #1380826.
-      continue;
-    }
-    if (!$created_unix = strtotime($row->created)) {
-      $created_unix = $row->created;
-    }
-
-    db_update('shib_authmap')
-      ->fields(array(
-        'created_unix' => $created_unix,
-      ))
-      ->condition('id', $row->id, '=')
-      ->execute();
-  }
-
-  db_drop_field(
-    'shib_authmap',
-    'created'
-  );
-
-  db_change_field(
-    'shib_authmap',
-    'created_unix',
-    'created',
-    array(
-      'type' => 'int',
-    )
-  );
-
-  // Update the menu system cache.
-  menu_rebuild();
+function shib_auth_menu_update_last_removed() {
+  return 7001;
 }
 
 /**
- * Alter uid field so it supports larger values.
+ * From variable to config.
  */
-function shib_auth_update_7001() {
-  db_change_field('shib_authmap', 'uid', 'uid', array(
-    'type' => 'int',
-    'unsigned' => TRUE,
-    'not null' => TRUE,
-    'default' => 0,
-    'description' => 'The {users}.uid, which the persistent ID will be mapped to',
-  ));
+function shib_auth_menu_update_1000() {
+  global $base_url;
+  $t = get_t();
+  $config = config('shib_auth.settings');
+  $config->set('link_text', update_variable_get('shib_auth_link_text', $t('Shibboleth Login')));
+  $config->set('handler_url', update_variable_get('shib_auth_handler_url', '/Shibboleth.sso'));
+  $config->set('handler_protocol', update_variable_get('shib_auth_handler_protocol', 'https'));
+  $config->set('wayf_uri', update_variable_get('shib_auth_wayf_uri', '/DS'));
+  $config->set('full_handler_url', update_variable_get('shib_auth_full_handler_url', $base_url . '/DS'));
+  $config->set('full_logout_url', update_variable_get('shib_auth_full_logout_url', url('<front>')));
+  $config->set('username_variable', update_variable_get('shib_auth_username_variable', 'REMOTE_USER'));
+  $config->set('email_variable', update_variable_get('shib_auth_email_variable', 'HTTP_SHIB_MAIL'));
+  $config->set('auto_destroy_session', update_variable_get('shib_auth_auto_destroy_session', FALSE));
+  $config->set('logout_url', update_variable_get('shib_auth_logout_url', url('<front>')));
+  $config->set('login_url', update_variable_get('shib_auth_login_url', ''));
+  $config->set('debug_state', update_variable_get('shib_auth_debug_state', FALSE));
+  $config->set('debug_url', update_variable_get('shib_auth_debug_url', ''));
+  $config->set('enable_custom_mail', update_variable_get('shib_auth_enable_custom_mail', FALSE));
+  $config->set('define_username', update_variable_get('shib_auth_define_username', FALSE));
+  $config->set('account_linking', update_variable_get('shib_auth_account_linking', FALSE));
+  $config->set('account_linking_text', update_variable_get('shib_auth_account_linking_text', $t('Link this account with another identity')));
+  $config->set('is_passive', update_variable_get('shib_auth_is_passive', FALSE));
+  $config->set('forceauthn', update_variable_get('shib_auth_forceauthn', FALSE));
+  $config->set('terms_accept', update_variable_get('shib_auth_terms_accept', FALSE));
+  $config->set('terms_url', update_variable_get('shib_auth_terms_url', '/'));
+  $config->set('terms_ver', update_variable_get('shib_auth_terms_ver', ''));
+  $config->set('force_https', update_variable_get('shib_auth_force_https', FALSE));
+  $config->set('version', update_variable_get('shib_auth_version', ''));
+  $config->save();
+
+  update_variable_del('shib_auth_link_text');
+  update_variable_del('shib_auth_handler_url');
+  update_variable_del('shib_auth_handler_protocol');
+  update_variable_del('shib_auth_wayf_uri');
+  update_variable_del('shib_auth_full_handler_url');
+  update_variable_del('shib_auth_full_logout_url');
+  update_variable_del('shib_auth_username_variable');
+  update_variable_del('shib_auth_email_variable');
+  update_variable_del('shib_auth_auto_destroy_session');
+  update_variable_del('shib_auth_logout_url');
+  update_variable_del('shib_auth_login_url');
+  update_variable_del('shib_auth_debug_state');
+  update_variable_del('shib_auth_debug_url');
+  update_variable_del('shib_auth_enable_custom_mail');
+  update_variable_del('shib_auth_define_username');
+  update_variable_del('shib_auth_account_linking');
+  update_variable_del('shib_auth_account_linking_text');
+  update_variable_del('shib_auth_is_passive');
+  update_variable_del('shib_auth_forceauthn');
+  update_variable_del('shib_auth_terms_accept');
+  update_variable_del('shib_auth_terms_url');
+  update_variable_del('shib_auth_terms_ver');
+  update_variable_del('shib_auth_force_https');
+  update_variable_del('shib_auth_version');
 }

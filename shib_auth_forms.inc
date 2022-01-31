@@ -12,6 +12,8 @@
  */
 function shib_auth_admin_general($form, &$form_state) {
   $form = array();
+  $form['#config'] = 'shib_auth.settings';
+  $config = config('shib_auth.settings');
 
   $form['shib_handler_settings'] = array(
     '#type'          => 'fieldset',
@@ -27,71 +29,71 @@ function shib_auth_admin_general($form, &$form_state) {
     '#collapsible'   => FALSE,
   );
 
-  $form['shib_handler_settings']['shib_auth_full_handler_url'] = array(
+  $form['shib_handler_settings']['full_handler_url'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Shibboleth login handler URL'),
-    '#default_value' => shib_auth_config('full_handler_url'),
+    '#default_value' => $config->get('full_handler_url'),
     '#description'   => t('The URL can be absolute or relative to the server base URL: http://www.example.com/Shibboleth.sso/DS; /Shibboleth.sso/DS'),
   );
 
-  $form['shib_handler_settings']['shib_auth_full_logout_url'] = array(
+  $form['shib_handler_settings']['full_logout_url'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Shibboleth logout handler URL'),
-    '#default_value' => shib_auth_config('full_logout_url'),
+    '#default_value' => $config->get('full_logout_url'),
     '#description'   => t('The URL can be absolute or relative to the server base URL: http://www.example.com/Shibboleth.sso/Logout; /Shibboleth.sso/Logout'),
   );
 
-  $form['shib_handler_settings']['shib_auth_link_text'] = array(
+  $form['shib_handler_settings']['link_text'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Shibboleth login link text'),
-    '#default_value' => shib_auth_config('link_text'),
+    '#default_value' => $config->get('link_text'),
     '#description'   => t('The text of the login link. You can change this text on the Shibboleth login block settings form too!'),
   );
 
-  $form['shib_handler_settings']['shib_auth_force_https'] = array(
+  $form['shib_handler_settings']['force_https'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Force HTTPS on login'),
     '#description'   => t('The user will be redirected to HTTPS'),
-    '#default_value' => shib_auth_config('force_https'),
+    '#default_value' => $config->get('force_https'),
   );
 
-  $form['shib_attribute_settings']['shib_auth_username_variable'] = array(
+  $form['shib_attribute_settings']['username_variable'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Server variable for username'),
-    '#default_value' => shib_auth_config('username_variable'),
+    '#default_value' => $config->get('username_variable'),
   );
 
-  $form['shib_attribute_settings']['shib_auth_email_variable'] = array(
+  $form['shib_attribute_settings']['email_variable'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Server variable for email address'),
-    '#default_value' => shib_auth_config('email_variable'),
+    '#default_value' => $config->get('email_variable'),
   );
 
-  $form['shib_attribute_settings']['shib_auth_define_username'] = array(
+  $form['shib_attribute_settings']['define_username'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('User-defined username'),
     '#description'   => t('Allow users to set their Drupal username at first Shibboleth login. Note that disabling this option only prevents new users from registering their own username. Existing user-defined usernames will remain valid.'),
-    '#default_value' => shib_auth_config('define_username'),
+    '#default_value' => $config->get('define_username'),
   );
 
-  $form['shib_attribute_settings']['shib_auth_enable_custom_mail'] = array(
+  $form['shib_attribute_settings']['enable_custom_mail'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('User-defined email addresses'),
     '#description'   => t('Ask users to set their contact email address at first login. Disabling this option will override contact address with the one, which was received from IdP. (In this case, missing email address will result in fatal error.)'),
-    '#default_value' => shib_auth_config('enable_custom_mail'),
+    '#default_value' => $config->get('enable_custom_mail'),
   );
 
-  $form['shib_attribute_settings']['shib_auth_account_linking'] = array(
+  $form['shib_attribute_settings']['account_linking'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Account linking'),
     '#description'   => t('Allow locally authenticated users to link their Drupal accounts to federated logins. Note that disabling this option only prevents from creating/removing associations, existing links will remain valid.'),
-    '#default_value' => shib_auth_config('account_linking'),
+    '#default_value' => $config->get('account_linking'),
   );
 
-  $form['shib_attribute_settings']['shib_auth_account_linking_text'] = array(
+  $form['shib_attribute_settings']['account_linking_text'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Shibboleth account linking text'),
-    '#default_value' => shib_auth_config('account_linking_text'),
+    '#default_value' => $config->get('account_linking_text'),
     '#description'   => t('The text of the link providing account linking shown on the user settings form.'),
   );
 
@@ -101,16 +103,16 @@ function shib_auth_admin_general($form, &$form_state) {
     '#weight'        => -1,
   );
 
-  $form['shib_attribute_debug']['shib_auth_debug_state'] = array(
+  $form['shib_attribute_debug']['debug_state'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Enable DEBUG mode.'),
-    '#default_value' => shib_auth_config('debug_state'),
+    '#default_value' => $config->get('debug_state'),
   );
 
-  $form['shib_attribute_debug']['shib_auth_debug_url'] = array(
+  $form['shib_attribute_debug']['debug_url'] = array(
     '#type'          => 'textfield',
     '#title'         => t('DEBUG path prefix'),
-    '#default_value' => shib_auth_config('debug_url'),
+    '#default_value' => $config->get('debug_url'),
     '#description'   => t("For example use 'user/' for display DEBUG messages on paths 'user/*'!"),
   );
 
@@ -239,15 +241,15 @@ function shib_auth_login() {
   $queries = $_GET;
 
   // Get the path stripped of the shib_login/ prefix.
-  $path = drupal_substr($_GET['q'], 11);
+  $path = backdrop_substr($_GET['q'], 11);
 
   if ($path != 'shib_link') {
     // Remove q (Drupal path) from further queries.
     unset($queries['q']);
-    drupal_goto($path, array('query' => $queries));
+    backdrop_goto($path, array('query' => $queries));
   }
   else {
-    drupal_goto('shib_login/user');
+    backdrop_goto('shib_login/user');
   }
 }
 
@@ -256,7 +258,7 @@ function shib_auth_login() {
  */
 function shib_auth_account_link() {
   $_SESSION['shib_auth_account_linking'] = TRUE;
-  drupal_goto(shib_auth_generate_login_url());
+  backdrop_goto(shib_auth_generate_login_url());
 }
 
 /**
@@ -266,6 +268,8 @@ function shib_auth_account_link() {
  */
 function shib_auth_admin_advanced() {
   $form = array();
+  $form['#config'] = 'shib_auth.settings';
+  $config = config('shib_auth.settings');
 
   $form['shib_handler_settings'] = array(
     '#type'          => 'fieldset',
@@ -274,18 +278,18 @@ function shib_auth_admin_advanced() {
     '#collapsible'   => FALSE,
   );
 
-  $form['shib_handler_settings']['shib_auth_is_passive'] = array(
+  $form['shib_handler_settings']['is_passive'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Enable passive authentication'),
     '#description'   => t('Enable passive authentication'),
-    '#default_value' => shib_auth_config('is_passive'),
+    '#default_value' => $config->get('is_passive'),
   );
 
-  $form['shib_handler_settings']['shib_auth_forceauthn'] = array(
+  $form['shib_handler_settings']['forceauthn'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Enable forced authentication'),
     '#description'   => t('Force users to re-authenticate'),
-    '#default_value' => shib_auth_config('forceauthn'),
+    '#default_value' => $config->get('forceauthn'),
   );
 
   $form['shib_auth_auto_destroy_session'] = array(
@@ -294,10 +298,10 @@ function shib_auth_admin_advanced() {
     '#weight'        => -2,
   );
 
-  $form['shib_auth_auto_destroy_session']['shib_auth_auto_destroy_session'] = array(
+  $form['shib_auth_auto_destroy_session']['auto_destroy_session'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Destroy Drupal session when the Shibboleth session expires.'),
-    '#default_value' => shib_auth_config('auto_destroy_session'),
+    '#default_value' => $config->get('auto_destroy_session'),
   );
 
   $form['shib_login_settings'] = array(
@@ -306,10 +310,10 @@ function shib_auth_admin_advanced() {
     '#weight'        => -1,
   );
 
-  $form['shib_login_settings']['shib_auth_login_url'] = array(
+  $form['shib_login_settings']['login_url'] = array(
     '#type'          => 'textfield',
     '#title'         => t("URL to redirect to after login"),
-    '#default_value' => shib_auth_config('login_url'),
+    '#default_value' => $config->get('login_url'),
     '#description'   => t("The URL can be absolute or relative to the server base URL. The relative paths will be automatically extended with the site base URL. If this value is empty than the user will be redirected to the originally requested page."),
   );
 
@@ -319,10 +323,10 @@ function shib_auth_admin_advanced() {
     '#weight'        => -1,
   );
 
-  $form['shib_logout_settings']['shib_auth_logout_url'] = array(
+  $form['shib_logout_settings']['logout_url'] = array(
     '#type'          => 'textfield',
     '#title'         => t("URL to redirect to after logout"),
-    '#default_value' => shib_auth_config('logout_url'),
+    '#default_value' => $config->get('logout_url'),
     '#description'   => t("The URL can be absolute or relative to the server base URL. The relative paths will be automatically extended with the site base URL. If you are using SLO, this setting is probably useless (depending on the IdP)"),
   );
 
@@ -333,24 +337,24 @@ function shib_auth_admin_advanced() {
     '#collapsible'   => FALSE,
   );
 
-  $form['shib_terms_conditions_settings']['shib_auth_terms_accept'] = array(
+  $form['shib_terms_conditions_settings']['terms_accept'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Force users to accept Terms of Use'),
     '#description'   => t('Require acceptance of Terms of Use every time it changes'),
-    '#default_value' => shib_auth_config('terms_accept'),
+    '#default_value' => $config->get('terms_accept'),
   );
 
   $form['shib_terms_conditions_settings']['shib_auth_terms_url'] = array(
     '#type'          => 'textfield',
     '#title'         => t('URL of the document'),
-    '#default_value' => shib_auth_config('terms_url'),
+    '#default_value' => $config->get('terms_url'),
     '#description'   => t('Please refence local content with e.g. "node/1", or use an external link.'),
   );
 
   $form['shib_terms_conditions_settings']['shib_auth_terms_ver'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Document version'),
-    '#default_value' => shib_auth_config('terms_ver'),
+    '#default_value' => $config->get('terms_ver'),
     '#size'          => 4,
   );
 

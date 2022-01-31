@@ -1,0 +1,23 @@
+{
+    "_config_name": "shib_auth.settings",
+    "full_handler_url": "/Shibboleth.sso/DS",
+    "full_logout_url": "/Shibboleth.sso/Logout",
+    "link_text": "Shibboleth Login",
+    "force_https": 0,
+    "username_variable": "REMOTE_USER",
+    "email_variable": "HTTP_SHIB_MAIL",
+    "define_username": 0,
+    "enable_custom_mail": 0,
+    "account_linking": 0,
+    "account_linking_text": "Link this account with another identity",
+    "debug_state": 0,
+    "debug_url": "",
+    "is_passive": 0,
+    "forceauthn": 0,
+    "auto_destroy_session": 0,
+    "login_url": "",
+    "logout_url": "",
+    "terms_accept": 0,
+    "shib_auth_terms_url": "",
+    "shib_auth_terms_ver": ""
+}
