@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install file of the Shibboleth authentication module for Drupal system.
+ * Install file of the Shibboleth authentication module for Backdrop.
  */
 
 /**
@@ -14,7 +14,7 @@ function shib_auth_schema() {
   $schema = array();
 
   $schema['shib_authmap'] = array(
-    'description' => 'Stores shibboleth authentication mapping from persistent IDs to drupal users.',
+    'description' => 'Stores shibboleth authentication mapping from persistent IDs to Backdrop users.',
     'fields' => array(
       'id' => array(
         'type' => 'serial',
@@ -34,7 +34,7 @@ function shib_auth_schema() {
         'length' => 255,
         'default' => '',
         'not null' => TRUE,
-        'description' => 'The persistent ID, which will be mapped to a drupal uid',
+        'description' => 'The persistent ID, which will be mapped to a Backdrop uid',
       ),
       'idp' => array(
         'type' => 'varchar',

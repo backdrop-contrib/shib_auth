@@ -38,6 +38,6 @@ Requirements:
     document.cookie = "_check_is_passive=" + window.location;
 
     // Redirect to Shibboleth handler
-    window.location = Drupal.settings.shib_auth.login_url + "&isPassive=true";
+    window.location = Backdrop.settings.shib_auth.login_url + "&isPassive=true";
   }
 })(jQuery);

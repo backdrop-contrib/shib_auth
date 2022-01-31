@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Drupal Shibboleth authentication module.
+ * Backdrop Shibboleth authentication module.
  */
 
 /**
@@ -165,7 +165,7 @@ function shib_auth_terminate_session($msg = '') {
  *
  * @return bool
  *   FALSE if the session was invalid and therefore destroyed, TRUE if either
- *   there's a valid shib session or we allow stale Drupal sessions.
+ *   there's a valid shib session or we allow stale Backdrop sessions.
  */
 function shib_auth_session_check($uname) {
   global $user;
@@ -184,7 +184,7 @@ function shib_auth_session_check($uname) {
   if (isset($_SESSION['shib_auth_username'])) {
     if ($_SESSION['shib_auth_username'] != $uname && empty($_SESSION['shib_auth_account_linking'])) {
       /*  See SA-CONTRIB-2009-070
-      If we reach here, a new federated user was given an existing Drupal
+      If we reach here, a new federated user was given an existing Backdrop
       session of an old user. This can happen when using Single Logout.
       Probably we should try and re-register the new user instead of just
       kicking him out, but for now just terminate the session for safety.
@@ -291,7 +291,7 @@ function shib_auth_session_valid() {
 /**
  * Saves an entry into shib_authmap and also saves mail if changed.
  *
- * A row in the authmap contains the Drupal user id, the targeted id from
+ * A row in the authmap contains the Backdrop user id, the targeted id from
  * Shibboleth, the IdP name, the date the user was created, and user consent
  * version number.
  *
@@ -378,7 +378,7 @@ function shib_auth_save_authmap($uname, $custom_uname, $umail_single) {
  * @param string $umail_single
  *   The first email address of the user from the IdP.
  * @param int $uid
- *   Drupal user id.
+ *   Backdrop user id.
  * @param bool $alreadyloggedin
  *   TRUE if the user has already logged in and FALSE if not.
  */
@@ -505,7 +505,7 @@ function shib_auth_custom_mail($uname, $custom_username = '', $custom_mail = '')
   }
   // If custom username not enabled.
   elseif (shib_auth_config('define_username') == 0) {
-    // And email isn't used by another registered drupal user, save user.
+    // And email isn't used by another registered Backdrop user, save user.
     shib_auth_save_authmap($uname, $uname, $custom_mail);
   }
   // If the username is also enabled.
@@ -686,7 +686,7 @@ function shib_auth_custom_form($umail_single = NULL, $uname = NULL) {
  * @param string $umail_single
  *   The first email address of the user from the IdP.
  * @param string $uid
- *   Drupal UserID.
+ *   Backdrop UserID.
  */
 function shib_auth_consent_update($uname, $umail_single, $uid) {
   db_update('shib_authmap')
@@ -946,7 +946,7 @@ function shib_auth_get_handler_base() {
  * Logs users out from the Shibboleth authority.
  *
  * Let the user exit from the Shibboleth authority when he/she log out from the
- * actual Drupal site.
+ * actual Backdrop site.
  */
 function shib_auth_user_logout() {
   global $_shib_auth_logout;
@@ -1031,7 +1031,7 @@ function shib_auth_menu() {
   );
 
   $items['shib_auth/get_custom_data'] = array(
-    'title'            => 'Customize drupal user attributes',
+    'title'            => 'Customize Backdrop user attributes',
     'page callback'    => 'backdrop_get_form',
     'page arguments'   => array('shib_auth_custom_data'),
     'access callback' => 'access_shib_login',
@@ -1387,7 +1387,7 @@ function shib_auth_save_roles() {
       ->execute();
 
     foreach (array_keys($user->roles) as $rid) {
-      if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+      if (!in_array($rid, array(BACKDROP_ANONYMOUS_ROLE, BACKDROP_AUTHENTICATED_ROLE))) {
         db_insert('users_roles')
           ->fields(array(
             'uid' => $user->uid,

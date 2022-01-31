@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Drupal forms of the Shibboleth authentication module.
+ * Backdrop forms of the Shibboleth authentication module.
  */
 
 /**
@@ -72,7 +72,7 @@ function shib_auth_admin_general($form, &$form_state) {
   $form['shib_attribute_settings']['define_username'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('User-defined username'),
-    '#description'   => t('Allow users to set their Drupal username at first Shibboleth login. Note that disabling this option only prevents new users from registering their own username. Existing user-defined usernames will remain valid.'),
+    '#description'   => t('Allow users to set their Backdrop username at first Shibboleth login. Note that disabling this option only prevents new users from registering their own username. Existing user-defined usernames will remain valid.'),
     '#default_value' => $config->get('define_username'),
   );
 
@@ -86,7 +86,7 @@ function shib_auth_admin_general($form, &$form_state) {
   $form['shib_attribute_settings']['account_linking'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Account linking'),
-    '#description'   => t('Allow locally authenticated users to link their Drupal accounts to federated logins. Note that disabling this option only prevents from creating/removing associations, existing links will remain valid.'),
+    '#description'   => t('Allow locally authenticated users to link their Backdrop accounts to federated logins. Note that disabling this option only prevents from creating/removing associations, existing links will remain valid.'),
     '#default_value' => $config->get('account_linking'),
   );
 
@@ -235,7 +235,7 @@ function shib_auth_custom_data_validate($form, &$form_state) {
 }
 
 /**
- * This function prevents drupal loading a cached page after shibboleth login.
+ * This function prevents backdrop loading a cached page after shibboleth login.
  */
 function shib_auth_login() {
   $queries = $_GET;
@@ -244,7 +244,7 @@ function shib_auth_login() {
   $path = backdrop_substr($_GET['q'], 11);
 
   if ($path != 'shib_link') {
-    // Remove q (Drupal path) from further queries.
+    // Remove q (Backdrop path) from further queries.
     unset($queries['q']);
     backdrop_goto($path, array('query' => $queries));
   }
@@ -300,7 +300,7 @@ function shib_auth_admin_advanced() {
 
   $form['shib_auth_auto_destroy_session']['auto_destroy_session'] = array(
     '#type'          => 'checkbox',
-    '#title'         => t('Destroy Drupal session when the Shibboleth session expires.'),
+    '#title'         => t('Destroy Backdrop session when the Shibboleth session expires.'),
     '#default_value' => $config->get('auto_destroy_session'),
   );
 
