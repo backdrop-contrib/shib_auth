@@ -14,6 +14,9 @@ https://wiki.aai.niif.hu/index.php/DrupalShibbolethReadmeDev
 
 ## Issues
 
+Caution, this module port is in an early stage. Do not use on production,
+ yet. Full functionality isn't guaranteed, but testing is highly appreciated.
+
 Bugs and Feature requests should be reported in the
  [Issue Queue](https://github.com/backdrop-contrib/shib_auth/issues)
 
