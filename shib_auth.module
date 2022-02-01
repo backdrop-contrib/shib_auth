@@ -1124,10 +1124,7 @@ function shib_auth_block_info() {
   // Listing of blocks, such as on the admin/block page.
   $blocks['login_box'] = array(
     'info'       => t('Shibboleth authentication'),
-    'status'     => 0,
-    'visibility' => BLOCK_VISIBILITY_NOTLISTED,
-    'weight'     => 0,
-    'region'     => '',
+    'description' => t('Login box for the Shibboleth Authentication module'),
   );
   return $blocks;
 }
