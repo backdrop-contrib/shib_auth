@@ -5,6 +5,8 @@
  * Backdrop Shibboleth authentication module.
  */
 
+require_once __DIR__ . '/shib_auth_external_auth.inc';
+
 /**
  * Configuration handler.
  *
@@ -325,12 +327,12 @@ function shib_auth_save_authmap($uname, $custom_uname, $umail_single) {
         return;
       }
       $_SESSION['shib_auth_register_in_progress'] = TRUE;
-      user_external_login_register($custom_uname, 'shib_auth');
+      shib_auth_external_login_register($custom_uname, 'shib_auth');
       unset($_SESSION['shib_auth_register_in_progress']);
     }
 
-    if (!user_get_authmaps($user->name)) {
-      user_set_authmaps($user, array('auth_shib_auth' => $user->name));
+    if (!shib_auth_get_authmaps($user->name)) {
+      shib_auth_set_authmaps($user, array('auth_shib_auth' => $user->name));
     }
 
     $_SESSION['shib_auth_authentication'] = 'shib_auth';
@@ -396,12 +398,12 @@ function shib_login_authmap($uname, $umail_single, $uid, $alreadyloggedin = FALS
     ->fetchAssoc();
 
   // We load this account to make operations with.
-  $account = user_external_load($authmap_username['name']);
+  $account = shib_auth_external_load($authmap_username['name']);
   if (isset($account->uid)) {
     // We don't login user again, if there is already one logged in
     // (made redirect loops when linking an account).
     if (!user_is_blocked($account->name)) {
-      user_external_login_register($account->name, 'shib_auth');
+      shib_auth_external_login_register($account->name, 'shib_auth');
       if (user_is_logged_in()) {
         // Set auth variable to shib_auth.
         $_SESSION['shib_auth_authentication'] = 'shib_auth';

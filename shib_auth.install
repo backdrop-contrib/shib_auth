@@ -95,6 +95,52 @@ function shib_auth_schema() {
     'primary key' => array('id'),
   );
 
+  // Copy of Drupal 7 authmap schema.
+  $schema['shib_auth_authmap'] = array(
+    'description' => 'Stores distributed authentication mapping.',
+    'fields' => array(
+      'aid' => array(
+        'description' => 'Primary Key: Unique authmap ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "User's {users}.uid.",
+      ),
+      'authname' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Unique authentication name.',
+      ),
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Module which is controlling the authentication.',
+      ),
+    ),
+    'unique keys' => array(
+      'authname' => array('authname'),
+    ),
+    'primary key' => array('aid'),
+    'foreign keys' => array(
+      'user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+    'indexes' => array(
+      'uid_module' => array('uid', 'module'),
+    ),
+  );
+
   return $schema;
 }
 
@@ -162,4 +208,14 @@ function shib_auth_menu_update_1000() {
   update_variable_del('shib_auth_terms_ver');
   update_variable_del('shib_auth_force_https');
   update_variable_del('shib_auth_version');
+}
+
+/**
+ * Copy data from core authmap to shib_auth_authmap.
+ */
+function shib_auth_menu_update_1001() {
+  if (db_table_exists('authmap')) {
+    // Only data relevant for this module.
+    db_query("INSERT INTO {shib_auth_authmap} SELECT * FROM {authmap} WHERE module = 'shib_auth';");
+  }
 }
