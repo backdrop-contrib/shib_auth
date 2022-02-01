@@ -1251,6 +1251,17 @@ function shib_auth_theme($existing, $type, $theme, $path) {
   );
 }
 
+/**
+ * Implements hook_config_info().
+ */
+function shib_auth_config_info() {
+  $prefixes['shib_auth.settings'] = array(
+    'label' => t('Shibboleth Authentication settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
 /**************** ROLE ASSIGNMENT FUNCTIONS  *******************/
 
 /**
