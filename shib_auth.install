@@ -215,7 +215,11 @@ function shib_auth_menu_update_1000() {
  */
 function shib_auth_menu_update_1001() {
   if (db_table_exists('authmap')) {
-    // Only data relevant for this module.
-    db_query("INSERT INTO {shib_auth_authmap} SELECT * FROM {authmap} WHERE module = 'shib_auth';");
+    if (!db_table_exists('shib_auth_authmap')) {
+      $table = backdrop_get_schema_unprocessed('shib_auth', 'shib_auth_authmap');
+      db_create_table('shib_auth_authmap', $table);
+      // Only data relevant for this module.
+      db_query("INSERT INTO {shib_auth_authmap} SELECT * FROM {authmap} WHERE module = 'shib_auth';");
+    }
   }
 }
