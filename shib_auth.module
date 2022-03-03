@@ -928,13 +928,14 @@ function shib_auth_get_redirect_base($handlerurl) {
  *   Handler base in string.
  */
 function shib_auth_get_handler_base() {
-  $handlerurl = config_get('shib_auth.settings', 'handler_url');
-  $handlerprotocol = config_get('shib_auth.settings', 'handler_protocol');
+  $handlerurl = config_get('shib_auth.settings', 'full_handler_url');
   if (preg_match('#^http[s]{0,1}://#', $handlerurl)) {
     // If handlerurl is an absolute path.
     return $handlerurl;
   }
   else {
+    global $is_https;
+    $handlerprotocol = ($is_https) ? 'https' : 'http';
     // Else, if the handlerurl is a relative path
     // If the URI doesn't start with slash then extend it.
     if (backdrop_substr($handlerurl, 0, 1) != '/') {
