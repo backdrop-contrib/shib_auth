@@ -25,6 +25,12 @@ Bugs and Feature requests should be reported in the
 - [Indigoxela](https://github.com/indigoxela)
 - Seeking additional maintainers
 
+Progress has stalled for two reasons:
+
+1. The maintainer has no immediate need for it
+2. Until now the maintainer wasn't able to set up a functioning Shibboleth
+test environment (help welcome and highly appreciated)
+
 ## Credits
 
 - Written for Drupal by [Tamás Dévai](https://github.com/dorion)
